@@ -208,7 +208,27 @@ function extractEmails(str) {
  */
 function getRectangleString(width, height) {
     var str = "";
-    
+    str = '┌';
+    for (var i = 0; i < width-2; i++)
+    {
+    	str = str + '─';
+    }
+    str = str + '┐' + '\n';
+
+    for (var i = 0; i < height-2; i++)
+    {
+    	str = str + '│';
+    	for (var j = 0; j < width-2; j++)
+    		str = str + ' ';
+    	str = str + '│' + '\n';
+    }
+
+    str = str + '└';
+    for (var i = 0; i < width-2; i++)
+    {
+    	str = str + '─';
+    }
+    str = str + '┘' + '\n';
     return str;
 }
 
@@ -229,7 +249,20 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-    throw new Error('Not implemented');
+	var cipherText = '';
+    for (var i = 0; i < str.length; i++) {
+        if ((str.charCodeAt(i) > 64 && str.charCodeAt(i) < 78) || 
+            (str.charCodeAt(i) > 96 && str.charCodeAt(i) < 110)) {
+            cipherText += String.fromCharCode(str.charCodeAt(i) + 13);
+        }
+        else if ((str.charCodeAt(i) > 77 && str.charCodeAt(i) < 91) || 
+            (str.charCodeAt(i) > 109 && str.charCodeAt(i) < 123)) {
+            cipherText += String.fromCharCode(str.charCodeAt(i) - 13);
+        }
+        else
+            cipherText += str[i];
+    }
+    return cipherText;
 }
 
 /**
@@ -246,7 +279,10 @@ function encodeToRot13(str) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
-    throw new Error('Not implemented');
+	var bool = false;
+	if (typeof value == 'string' || value instanceof String)
+		bool = true;
+    return bool;
 }
 
 
@@ -275,7 +311,17 @@ function isString(value) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-    throw new Error('Not implemented');
+	var number = 0;
+	var str = [
+	'A♣','2♣','3♣','4♣','5♣','6♣','7♣','8♣','9♣','10♣','J♣','Q♣','K♣',
+ 	'A♦','2♦','3♦','4♦','5♦','6♦','7♦','8♦','9♦','10♦','J♦','Q♦','K♦',
+	'A♥','2♥','3♥','4♥','5♥','6♥','7♥','8♥','9♥','10♥','J♥','Q♥','K♥',
+ 	'A♠','2♠','3♠','4♠','5♠','6♠','7♠','8♠','9♠','10♠','J♠','Q♠','K♠'
+ 	];
+	for (var i = 0; i < str.length; i++)
+		if (value == str[i])
+			 number = i;
+    return number;
 }
 
 
