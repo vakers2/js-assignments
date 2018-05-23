@@ -27,7 +27,9 @@
  *
  */
 function getComposition(f,g) {
-    throw new Error('Not implemented');
+       return function(x) {
+        return f(g(x));
+    }
 }
 
 
@@ -48,7 +50,9 @@ function getComposition(f,g) {
  *
  */
 function getPowerFunction(exponent) {
-    throw new Error('Not implemented');
+    return function(x) {
+        return Math.pow(x, exponent);
+    }
 }
 
 
@@ -66,7 +70,17 @@ function getPowerFunction(exponent) {
  *   getPolynom()      => null
  */
 function getPolynom() {
-    throw new Error('Not implemented');
+    if (arguments.length > 0) {
+        let args = arguments;
+        return function(x) {
+            let sum = 0;
+            for (let i = 0; i < args.length; i++)
+                sum += args[i] * Math.pow(x, args.length - i - 1);
+            return sum;
+        };
+    }
+    else 
+        return null;
 }
 
 
@@ -85,7 +99,12 @@ function getPolynom() {
  *   memoizer() => тоже рандомное число  (при всех последующих вызовах возвращается тоже закешированный результат)
  */
 function memoize(func) {
-    throw new Error('Not implemented');
+    let mem = undefined;
+    return function() {
+        if (!mem)
+            mem = func();
+        return mem;
+    }
 }
 
 
@@ -104,7 +123,18 @@ function memoize(func) {
  * retryer() => 2
  */
 function retry(func, attempts) {
-    throw new Error('Not implemented');
+    let retryer = function() {
+        let retries = attempts;
+        while (retries >= 0) {
+            try {
+                return func();
+            }
+            catch (ex) {
+                retries--;
+            }
+        }
+    };
+    return retryer;
 }
 
 
@@ -131,7 +161,28 @@ function retry(func, attempts) {
  *
  */
 function logger(func, logFunc) {
-    throw new Error('Not implemented');
+    return (...args)=>{
+        let str = '';
+        for (let index = 0; index < args.length; index++) {
+            if (args[index] instanceof Array) {
+                str += '[';
+                for (let i = 0; i < args[index].length; i++)
+                    if ((typeof (args[index][i])).toLowerCase() == "string")
+                        str += "\"" + args[index][i] + "\",";
+                    else
+                        str += args[index][i] + ",";
+                str = str.slice(0, str.length - 1);
+                str += '],';
+            }
+            else
+                str += args[index] + ',';
+        }
+        str = str.slice(0, str.length - 1);
+        logFunc(`${func.name}(${str}) starts`);
+        let res = func.apply(this, args);
+        logFunc(`${func.name}(${str}) ends`);
+        return res;
+    }
 }
 
 
@@ -147,8 +198,10 @@ function logger(func, logFunc) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(fn) {
-    throw new Error('Not implemented');
+function partialUsingArguments(fn,...args0) {
+    return (...args1)=>{
+        return fn(...args0,...args1);
+    }
 }
 
 
@@ -169,7 +222,9 @@ function partialUsingArguments(fn) {
  *   getId10() => 11
  */
 function getIdGeneratorFunction(startFrom) {
-    throw new Error('Not implemented');
+    return function() {
+        return startFrom++;
+    };
 }
 
 
